@@ -1,0 +1,15 @@
+.addCard {
+    background: #FFFFFF;
+    box-shadow: 0px 4px 24px #00000014;
+    gap: 16px;
+    cursor: pointer;
+}
+
+.addCard svg {
+    width: 24px;
+    height: 24px;
+}
+
+.addCard svg path{
+    fill: rgba(180, 180, 180, 0.767);
+}

@@ -1,0 +1,91 @@
+.slide__container {
+    display: grid;
+    place-items: center;
+    position: relative;
+    max-width: 80%;     
+    box-shadow: 0px 4px 24px #00000014;
+}
+
+.slide__container img {
+    border-radius: 16px;
+    width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.slide__container .closeBtn,
+.slide__container .prev,
+.slide__container .next {
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    box-shadow: 0px 4px 24px #00000014;
+    position: absolute;
+    width: 2rem;
+    max-width: 80px;
+    aspect-ratio: 1;
+}
+
+.slide__container .closeBtn {
+    border: none;
+    background: #000000;
+    opacity: 0.56; 
+    top: 20px;
+    right: 20px;
+}
+
+.slide__container .closeBtn svg,
+.slide__container .prev svg,
+.slide__container .next svg {
+    font-size: clamp(1rem, 0.8952rem + 2.0238vw, 2rem);
+}
+
+.slide__container .closeBtn svg path {
+    fill: #FFFFFF;
+}
+
+.slide__container .prev,
+.slide__container .next {
+    top: 50%;
+    background: #FFFFFF;
+}
+
+.slide__container .prev {
+    left: 0;
+    transform: translate(-50%,-50%);
+}
+
+.slide__container .next {
+    right: 0;
+    transform: translate(50%,-50%);
+}
+
+@media (min-width: 550px) {
+    .slide__container .closeBtn,
+    .slide__container .prev,
+    .slide__container .next {
+        width: 3rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .slide__container .closeBtn,
+    .slide__container .prev,
+    .slide__container .next {
+        width: 3.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .slide__container .closeBtn,
+    .slide__container .prev,
+    .slide__container .next {
+        width: 4rem;
+    }
+
+    .slide__container .closeBtn {
+        top: 24px;
+        right: 24px;
+    }
+}

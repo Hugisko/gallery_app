@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&display=swap');
+
+/*css reset*/
+*, 
+*::before, 
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+  --font-medium: 500;
+  --font-regular: 400;
+}
+
+
+html, body {
+    height: 100%;
+}
+
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+
+input, button, textarea, select {
+    font: inherit;
+    font-family: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    font-weight: var(--font-regular);
+    -webkit-font-smoothing: antialiased;
+    color: #000000;
+    background-color: #F9F9F9;
+    line-height: 1.5;
+    width: 100%;
+    min-height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+
+
+/*utils*/
+
+.overlay {
+    background: #0000008F;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    width: 100%;
+}
+
+.card {
+    width: 304px;
+    height: 295px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.addModal__container {
+    width: 100%;
+    max-width: 560px;
+    background: transparent;
+}
+
+.addModal {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 48px;
+    margin-inline: auto;
+    width: 90%;
+}
+
+.addModal__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: var(--font-medium);
+    font-size: 24px;
+}
+
+.addModal__title .closeBtn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.addModal .addBtn {
+    background: #000000;
+    color: #FFFFFF;
+    width: 100%;
+    height: 64px;
+    text-align: center; 
+    border-radius: 4px;
+    border: none;
+    font-weight: var(--font-medium);
+    cursor: pointer;
+}
+
+.grid-center {
+    display: grid;
+    place-items: center;
+}
+
+.flex-center-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-center-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
