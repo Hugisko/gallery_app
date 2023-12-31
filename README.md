@@ -10,7 +10,7 @@ Currently, two official plugins are available:
 
 Gallery_app
 
-step:
-1. navigate to the files
+steps:
+1. navigate to the folder
 2. install all the dependencies with command: npm install
 3. run the app: npm run dev
