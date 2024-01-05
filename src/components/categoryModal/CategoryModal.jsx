@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./categoryModal.css";
 import { IoMdClose } from "react-icons/io";
-import { useGlobalContext } from "../../context/Context";
+import { useGlobalContext } from "../../hooks/useGlobalContext";
+import {API_BASE_URL} from '../../constants/constant';
+import PropTypes from 'prop-types';
+import useCloseModal from "../../hooks/useCloseModal";
 
 const CategoryModal = ({ setOpenModal }) => {
   const [galleryName, setGalleryName] = useState("");
-  const { setUpdatedGallery, API_BASE_URL, setErrorMsg, errorMsg } =
-    useGlobalContext();
+  const [errorMsg, setErrorMsg] = useState(null);
+  const { setUpdatedGallery } = useGlobalContext();
+  const isClosed = useCloseModal();
+
+  const handleCreateGallery = (e) => {
+    e.preventDefault();
+    setUpdatedGallery(false);
+    setErrorMsg(null);
+
+    createGallery();
+  };
+
+  const handleCloseBtn = useCallback(() => {
+    setOpenModal(false);
+    setErrorMsg(null);
+  }, [setOpenModal]);
 
   const createGallery = async () => {
     const option = {
@@ -42,18 +59,11 @@ const CategoryModal = ({ setOpenModal }) => {
     }
   };
 
-  const handleCreateGallery = (e) => {
-    e.preventDefault();
-    setUpdatedGallery(false);
-    setErrorMsg(null);
-
-    createGallery();
-  };
-
-  const handleCloseBtn = () => {
-    setOpenModal(false);
-    setErrorMsg(null);
-  };
+  useEffect(()=>{
+    if(isClosed){
+      handleCloseBtn();
+    }
+  },[isClosed, handleCloseBtn])
 
   return (
     <div className="overlay">
@@ -86,6 +96,10 @@ const CategoryModal = ({ setOpenModal }) => {
       </div>
     </div>
   );
+};
+
+CategoryModal.propTypes = {
+  setOpenModal: PropTypes.func,
 };
 
 export default CategoryModal;

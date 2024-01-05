@@ -1,9 +1,8 @@
 import AddCard from "./../addCard/AddCard";
 import Card from "./../card/Card";
-import { useGlobalContext } from "../../context/Context";
+import PropTypes from "prop-types";
 
-const Categories = ({ setOpenModal, setOpenDeleteModal }) => {
-  const { galleryList, galleryItem, photoUrl } = useGlobalContext();
+const Categories = ({ setOpenModal, setOpenDeleteModal, galleryList, galleryItem, photoUrl }) => {
 
   return (
     <div className="categories container">
@@ -21,7 +20,7 @@ const Categories = ({ setOpenModal, setOpenDeleteModal }) => {
         });
         if (inList) {
           let imgGallery = null;
-          if (item.hasOwnProperty("image")) {
+          if (Object.hasOwnProperty.call(item,"image")) {
             imgGallery = photoUrl[item.image.fullpath];
           }
           return (
@@ -32,7 +31,7 @@ const Categories = ({ setOpenModal, setOpenDeleteModal }) => {
               photo={imgGallery}
               total={total}
               setOpenDeleteModal={setOpenDeleteModal}
-              activeCard={galleryPath}
+              activeCategory={galleryPath}
             />
           );
         }
@@ -40,6 +39,14 @@ const Categories = ({ setOpenModal, setOpenDeleteModal }) => {
       <AddCard setOpenModal={setOpenModal} title="Pridať kategóriu" />
     </div>
   );
-}
+};
+
+Categories.propTypes = {
+  setOpenModal: PropTypes.func,
+  setOpenDeleteModal: PropTypes.func,
+  galleryList: PropTypes.array, 
+  galleryItem: PropTypes.array, 
+  photoUrl: PropTypes.object
+};
 
 export default Categories;

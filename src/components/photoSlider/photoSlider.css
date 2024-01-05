@@ -35,6 +35,11 @@
     right: 20px;
 }
 
+.slide__container .active {
+  outline: 4px dashed rgb(255, 255, 255);
+  outline-offset: 4px;
+}
+
 .slide__container .closeBtn svg,
 .slide__container .prev svg,
 .slide__container .next svg {

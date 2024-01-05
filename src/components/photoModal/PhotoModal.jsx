@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { CiImageOn } from "react-icons/ci";
 import "./photoModal.css";
-import { useGlobalContext } from "./../../context/Context";
+import { useGlobalContext } from "../../hooks/useGlobalContext";
+import {API_BASE_URL} from '../../constants/constant';
+import PropTypes from 'prop-types';
+import useCloseModal from "../../hooks/useCloseModal";
 
-const PhotoModal = ({ setOpenModal }) => {
+const PhotoModal = ({ setOpenModal, path }) => {
   const [images, setImages] = useState([]);
-  const {
-    activeGallery,
-    galleryList,
-    setUpdatedPhotos,
-    API_BASE_URL,
-    setErrorMsg,
-    errorMsg,
-  } = useGlobalContext();
+  const [errorMsg, setErrorMsg] = useState(null);
+  const {setUpdatedPhotos} = useGlobalContext();
+  const isClosed = useCloseModal();
 
   const addImages = (files) => {
     for (let index = 0; index < files.length; index++) {
@@ -59,9 +57,6 @@ const PhotoModal = ({ setOpenModal }) => {
     e.preventDefault();
     setUpdatedPhotos(false);
     setErrorMsg(null);
-    const path = galleryList.find(
-      (item) => item.name === activeGallery.name
-    ).path;
 
     const formData = new FormData();
     images.forEach((img, index) => {
@@ -93,6 +88,12 @@ const PhotoModal = ({ setOpenModal }) => {
       console.error(error.message);
     }
   };
+
+  useEffect(()=>{
+    if(isClosed){
+      setOpenModal(false);
+    }
+  },[isClosed,setOpenModal])
 
   return (
     <div className="overlay">
@@ -144,6 +145,11 @@ const PhotoModal = ({ setOpenModal }) => {
       </div>
     </div>
   );
+};
+
+PhotoModal.propTypes = {
+  setOpenModal: PropTypes.func,
+  path: PropTypes.string
 };
 
 export default PhotoModal;

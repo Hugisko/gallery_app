@@ -1,65 +1,29 @@
-import React from "react";
 import "./deleteModal.css";
-import { useGlobalContext } from "../../context/Context";
+import PropTypes from "prop-types";
+import { useEffect } from "react";
+import useCloseModal from "../../hooks/useCloseModal";
 
-const DeleteModal = ({ setOpenDeleteModal, type }) => {
-  const {
-    setUpdatedGallery,
-    activeGallery,
-    setUpdatedPhotos,
-    activeImg,
-    API_BASE_URL,
-  } = useGlobalContext();
+const DeleteModal = ({ setOpenDeleteModal, setIsDeleting, title }) => {
+  const isClosed = useCloseModal();
 
-  const deleteImageOrGallery = async (path) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/gallery/${path}`, {
-        method: "DELETE",
-      });
-      if (response.status === 200) {
-        console.log("Gallery or photo deleted");
-        if (type === "gallery") {
-          setUpdatedGallery(true);
-        } else {
-          setUpdatedPhotos(true);
-        }
-        setOpenDeleteModal(false);
-      } else if (response.status === 404) {
-        throw new Error("Gallery or photo does not exist");
-      } else {
-        throw new Error("Unknown error");
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
+  const handleDeleteBtn = () => {
+    setIsDeleting(true);
+    setOpenDeleteModal(false);
   };
 
-  const handleDeleteBtn = (e) => {
-    e.preventDefault();
-    let path;
-
-    if (type === "gallery") {
-      path = activeGallery.path;
-      setUpdatedGallery(false);
-    } else {
-      path = activeImg.path;
-      setUpdatedPhotos(false);
+  useEffect(() => {
+    if (isClosed) {
+      setOpenDeleteModal(false);
     }
-
-    deleteImageOrGallery(path);
-  };
+  }, [isClosed, setOpenDeleteModal]);
 
   return (
     <div className="overlay">
       <div className="deleteModal">
         <form action="">
-          <h2>{`${
-            type === "gallery"
-              ? `Naozaj chcete vymazať ${activeGallery.name} galériu?`
-              : "Naozaj chcete vymazať túto fotografiu?"
-          }`}</h2>
+          <h2>{title}</h2>
           <div className="btn__container flex-center-row">
-            <button type="submit" onClick={handleDeleteBtn}>
+            <button type="button" onClick={handleDeleteBtn}>
               áno
             </button>
             <button type="button" onClick={() => setOpenDeleteModal(false)}>
@@ -70,6 +34,12 @@ const DeleteModal = ({ setOpenDeleteModal, type }) => {
       </div>
     </div>
   );
+};
+
+DeleteModal.propTypes = {
+  setOpenDeleteModal: PropTypes.func,
+  setIsDeleting: PropTypes.func,
+  title: PropTypes.string
 };
 
 export default DeleteModal;

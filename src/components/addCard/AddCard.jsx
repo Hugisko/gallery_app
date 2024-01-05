@@ -1,6 +1,6 @@
-import React from "react";
 import "./addCard.css";
 import { CgAddR } from "react-icons/cg";
+import PropTypes from 'prop-types';
 
 const AddCard = ({ setOpenModal, title }) => {
   return (
@@ -10,5 +10,10 @@ const AddCard = ({ setOpenModal, title }) => {
     </div>
   );
 }
+
+AddCard.propTypes = {
+  setOpenModal: PropTypes.func,
+  title: PropTypes.string
+};
 
 export default AddCard;

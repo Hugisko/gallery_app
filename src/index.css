@@ -51,10 +51,14 @@ body {
     line-height: 1.5;
     width: 100%;
     min-height: 100%;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
 }
 
+#root {
+    width: 100%;
+}
 
 
 /*utils*/
@@ -72,15 +76,23 @@ body {
 }
 
 .container {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill,minmax(304px,1fr));
     gap: 32px;
     width: 100%;
 }
 
+.container > * {
+    aspect-ratio: 1;
+}
+
 .card {
-    width: 304px;
-    height: 295px;
+    width: 100%;
+    height: 100%;
+    min-width: 304px;
+    min-height: 295px;
     border-radius: 4px;
     overflow: hidden;
     position: relative;
