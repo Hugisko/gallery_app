@@ -22,7 +22,7 @@ const Photopage = () => {
   const abortController = useMemo(() => new AbortController(), []);
 
   const { updatedPhotos, setUpdatedPhotos } = useGlobalContext();
-  const { addGalleryToCache, getGalleryFromCache, updateGalleryCache } = useCache();
+  const { addGalleryToCache, getGalleryFromCache, updateGalleryCache, resetCategories } = useCache();
   const setIsDeleting = useDelete("image");
 
   const { id } = useParams();
@@ -33,6 +33,9 @@ const Photopage = () => {
       if(cachedGallery && !updatedPhotos){
         setImages(cachedGallery.images);
       }else{
+        if(updatedPhotos){
+          resetCategories();
+        }
         setIsGalleryFetched(false);
         setIsDeleting(false);
         try {
@@ -98,7 +101,7 @@ const Photopage = () => {
 
     if (isGalleryFetched) {
       if(gallery.images.length === 0){
-        if(getGalleryFromCache() === undefined){
+        if(getGalleryFromCache(id) === undefined){
           addGalleryToCache(id,[]);
         }else{
           updateGalleryCache(id,[]);

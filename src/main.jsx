@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <BrowserRouter>
           <App />
         </BrowserRouter>
-        </CacheProvider>
+      </CacheProvider>
     </AppProvider>
   </React.StrictMode>
 );

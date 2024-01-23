@@ -3,51 +3,17 @@ import { IoMdClose } from "react-icons/io";
 import { CiImageOn } from "react-icons/ci";
 import "./photoModal.css";
 import { useGlobalContext } from "../../hooks/useGlobalContext";
-import {API_BASE_URL} from '../../constants/constant';
 import PropTypes from 'prop-types';
 import useCloseModal from "../../hooks/useCloseModal";
+import useCreatePhoto from "../../hooks/useCreatePhoto";
+import useHandleImages from "../../hooks/useHandleImages";
 
 const PhotoModal = ({ setOpenModal, path }) => {
-  const [images, setImages] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const {setUpdatedPhotos} = useGlobalContext();
   const isClosed = useCloseModal();
-
-  const addImages = (files) => {
-    for (let index = 0; index < files.length; index++) {
-      if (files[index].type.split("/")[0] !== "image") continue;
-      if (!images.some((e) => e.name === files[index].name)) {
-        setImages((prevImages) => [
-          ...prevImages,
-          {
-            name: files[index].name,
-            url: URL.createObjectURL(files[index]),
-            file: files[index],
-          },
-        ]);
-      }
-    }
-  };
-
-  const selectImages = (e) => {
-    const files = e.target.files;
-    addImages(files);
-  };
-
-  const onDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    addImages(files);
-  };
-
-  const onDragOver = (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "copy";
-  };
-
-  const onDragLeave = (e) => {
-    e.preventDefault();
-  };
+  const {images,setImages,selectImages,onDragOver,onDragLeave,onDrop} = useHandleImages();
+  const setIsCreating = useCreatePhoto(images,setUpdatedPhotos,setOpenModal,setErrorMsg,path);
 
   const deleteImage = (idx) => {
     setImages((img) => img.filter((_, i) => i !== idx));
@@ -57,36 +23,7 @@ const PhotoModal = ({ setOpenModal, path }) => {
     e.preventDefault();
     setUpdatedPhotos(false);
     setErrorMsg(null);
-
-    const formData = new FormData();
-    images.forEach((img, index) => {
-      formData.append(`image${index + 1}`, img.file);
-    });
-
-    const option = {
-      method: "POST",
-      body: formData,
-    };
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/gallery/${path}`, option);
-      if (response.status === 200 || response.status === 201) {
-        const result = await response.json();
-        console.log("Images uploaded:", result);
-        setUpdatedPhotos(true);
-        setOpenModal(false);
-      } else if (response.status === 400) {
-        setErrorMsg("Invalid request");
-        throw new Error("Invalid request - file not found.");
-      } else if (response.status === 404) {
-        setErrorMsg("Gallery not found.");
-        throw new Error("Gallery not found.");
-      } else {
-        throw new Error("Unknown error");
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
+    setIsCreating(true);
   };
 
   useEffect(()=>{

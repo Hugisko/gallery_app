@@ -2,22 +2,22 @@ import { useCallback, useEffect, useState } from "react";
 import "./categoryModal.css";
 import { IoMdClose } from "react-icons/io";
 import { useGlobalContext } from "../../hooks/useGlobalContext";
-import {API_BASE_URL} from '../../constants/constant';
 import PropTypes from 'prop-types';
 import useCloseModal from "../../hooks/useCloseModal";
+import useCreateCategory from "../../hooks/useCreateCategory";
 
-const CategoryModal = ({ setOpenModal }) => {
+const CategoryModal = ({ setOpenModal}) => {
   const [galleryName, setGalleryName] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
   const { setUpdatedGallery } = useGlobalContext();
   const isClosed = useCloseModal();
+  const setIsCreating = useCreateCategory(galleryName, setOpenModal, setUpdatedGallery, setErrorMsg);
 
   const handleCreateGallery = (e) => {
     e.preventDefault();
     setUpdatedGallery(false);
     setErrorMsg(null);
-
-    createGallery();
+    setIsCreating(true); 
   };
 
   const handleCloseBtn = useCallback(() => {
@@ -25,40 +25,7 @@ const CategoryModal = ({ setOpenModal }) => {
     setErrorMsg(null);
   }, [setOpenModal]);
 
-  const createGallery = async () => {
-    const option = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: galleryName,
-      }),
-    };
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/gallery`, option);
-      if (response.status === 201) {
-        const result = await response.json();
-        console.log("Gallery created:", result);
-        setOpenModal(false);
-        setUpdatedGallery(true);
-      } else if (response.status === 400) {
-        const result = await response.json();
-        setErrorMsg("Invalid request");
-        throw new Error(result.description);
-      } else if (response.status === 409) {
-        setErrorMsg("Gallery with this name already exists");
-        throw new Error("Gallery with this name already exists");
-      } else {
-        setErrorMsg("Unknown error");
-        throw new Error("Unknown error");
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
+  
   useEffect(()=>{
     if(isClosed){
       handleCloseBtn();

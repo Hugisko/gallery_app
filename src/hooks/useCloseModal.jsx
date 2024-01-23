@@ -8,9 +8,19 @@ const useCloseModal = () => {
         setClose(true);
       }
     };
+
+    const handleClick = (event) => {
+      const overlay = document.querySelector('.overlay');
+      if(event.target === overlay){
+        setClose(true);
+      }
+    }
+
+    window.addEventListener("click",handleClick);
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("click",handleClick);
     };
   }, []);
   return close;

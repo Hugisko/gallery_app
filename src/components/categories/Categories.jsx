@@ -2,7 +2,7 @@ import AddCard from "./../addCard/AddCard";
 import Card from "./../card/Card";
 import PropTypes from "prop-types";
 
-const Categories = ({ setOpenModal, setOpenDeleteModal, galleryList, galleryItem, photoUrl }) => {
+const Categories = ({ setOpenModal, setOpenDeleteModal, galleryList, galleryItem, photoUrl, isLoading }) => {
 
   return (
     <div className="categories container">
@@ -32,6 +32,7 @@ const Categories = ({ setOpenModal, setOpenDeleteModal, galleryList, galleryItem
               total={total}
               setOpenDeleteModal={setOpenDeleteModal}
               activeCategory={galleryPath}
+              isLoading={isLoading}
             />
           );
         }
@@ -46,7 +47,8 @@ Categories.propTypes = {
   setOpenDeleteModal: PropTypes.func,
   galleryList: PropTypes.array, 
   galleryItem: PropTypes.array, 
-  photoUrl: PropTypes.object
+  photoUrl: PropTypes.object,
+  isLoading: PropTypes.bool
 };
 
 export default Categories;

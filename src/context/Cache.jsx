@@ -5,6 +5,9 @@ const CacheContext = createContext(null);
 
 const CacheProvider = ({ children }) => {
   const [galleryCache, setGalleryCache] = useState([]);
+  const [categoryCache, setCategoryCache] = useState([]);
+  const [categoryPhotoCache, setCategoryPhotoCache] = useState({});
+  const [categoryListCache,setCategoryListCache] = useState([]);
 
   const addGalleryToCache = (galleryName, images) => {
     if(getGalleryFromCache(galleryName)){
@@ -33,9 +36,34 @@ const CacheProvider = ({ children }) => {
     }
   }
 
+  const addCategoryToCache = (category) => {
+    setCategoryCache((prevCache) => [
+      ...prevCache,
+      category,
+    ]);
+  };
+
+  const addCategoryPhotoToCache = (path,photo) => {
+    setCategoryPhotoCache((prevCache) => ({
+      ...prevCache,
+      [path]: photo,
+    }));
+  };
+
+  const addCategoryListToCache = (list) => {
+    setCategoryListCache(list);
+  };
+
+  const resetCategories = () => {
+    setCategoryCache([]);
+    setCategoryListCache([]);
+    setCategoryPhotoCache({});
+
+  }
+
   return (
     <CacheContext.Provider
-      value={{ addGalleryToCache, getGalleryFromCache, updateGalleryCache }}
+      value={{ addGalleryToCache, getGalleryFromCache, updateGalleryCache, addCategoryToCache, addCategoryPhotoToCache, categoryPhotoCache, categoryCache,categoryListCache, addCategoryListToCache, resetCategories}}
     >
       {children}
     </CacheContext.Provider>

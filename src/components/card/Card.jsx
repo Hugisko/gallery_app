@@ -4,7 +4,7 @@ import { AiOutlineStop } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../../hooks/useGlobalContext";
 import PropTypes from "prop-types";
-import Loading from "../loading/Loading";
+import ProgressiveImage from "../../utils/ProgressiveImage";
 
 const Card = ({
   isCategory,
@@ -14,6 +14,7 @@ const Card = ({
   setshowPhotoModal,
   setOpenDeleteModal,
   activeCategory,
+  isLoading
 }) => {
   const { setActiveGallery, setActiveImg } = useGlobalContext();
 
@@ -49,7 +50,7 @@ const Card = ({
           </span>
           <Link to={`photos/${activeCategory.path}`}>
             {photo !== null ? (
-              <img src={photo} alt={activeCategory.name} loading="lazy" />
+              <ProgressiveImage src={photo} alt={activeCategory.name} loading={isLoading} handleClickImage={null}/>
             ) : (
               <div className="empty grid-center">
                 <AiOutlineStop />
@@ -63,21 +64,10 @@ const Card = ({
         </div>
       ) : (
         <div className="photoCard card grid-center">
-          {photo.loading ? (
-            <Loading />
-          ) : (
-            <>
-              <img
-                src={photo.url}
-                alt={photo.fullpath}
-                onClick={handleClickImage}
-                loading="lazy"
-              />
-              <button className="deleteBtn" onClick={handleDeleteImage}>
-                <FaRegTrashCan />
-              </button>
-            </>
-          )}
+            <ProgressiveImage src={photo.url} alt={photo.fullpath} loading={photo.loading} handleClickImage={handleClickImage}/>
+            <button className="deleteBtn" onClick={handleDeleteImage}>
+              <FaRegTrashCan />
+            </button>
         </div>
       )}
     </>
@@ -92,6 +82,7 @@ Card.propTypes = {
   setshowPhotoModal: PropTypes.func,
   setOpenDeleteModal: PropTypes.func,
   activeCategory: PropTypes.object,
+  isLoading: PropTypes.bool
 };
 
 export default Card;

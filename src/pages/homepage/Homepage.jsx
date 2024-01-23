@@ -7,6 +7,7 @@ import Loading from "../../components/loading/Loading";
 import useDelete from "../../hooks/useDelete";
 import { API_BASE_URL } from '../../constants/constant.js'
 import { useGlobalContext } from "../../hooks/useGlobalContext";
+import { useCache } from "../../hooks/useCache.jsx";
 
 const Homepage = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -15,8 +16,10 @@ const Homepage = () => {
   const [isGalleryFetched, setIsGalleryFetched] = useState(false);
   const [galleryItem, setGalleryItem] = useState([]);
   const [photoUrl, setPhotoUrl] = useState({});
+  const [isLoading, setIsloading] = useState(true);
 
-  const { updatedGallery, activeGallery, setUpdatedGallery } = useGlobalContext();
+  const { updatedGallery, activeGallery, setUpdatedGallery} = useGlobalContext();
+  const {addCategoryToCache, addCategoryPhotoToCache,categoryPhotoCache, resetCategories, categoryCache, addCategoryListToCache, categoryListCache} = useCache();
   const setIsDeleting = useDelete("gallery");
 
   useEffect(() => {
@@ -24,10 +27,19 @@ const Homepage = () => {
     setUpdatedGallery(false);
     setIsDeleting(false);
     const fetchGalleryList = async () => {
+      if(categoryCache.length > 0 && !updatedGallery){
+        setIsloading(false);
+        setGalleryList(categoryListCache);
+        setGalleryItem(categoryCache);
+        setPhotoUrl(categoryPhotoCache);
+        return;
+      }
+      resetCategories();
       try {
         const response = await fetch(`${API_BASE_URL}/gallery`);
         if (response.status === 200) {
           const data = await response.json();
+          addCategoryListToCache(data.galleries);
           setGalleryList(data.galleries);
           setIsGalleryFetched(true);
         } else {
@@ -37,7 +49,7 @@ const Homepage = () => {
         console.error(error.message);
       }
     };
-
+    
     fetchGalleryList();
   }, [updatedGallery]);
 
@@ -47,6 +59,7 @@ const Homepage = () => {
         const response = await fetch(`${API_BASE_URL}/gallery/${path}`);
         if (response.status === 200) {
           const data = await response.json();
+          addCategoryToCache(data);
           setGalleryItem((prevData) => [...prevData, data]);
         } else if (response.status === 404) {
           throw new Error(`Gallery does not exists: ${path}`);
@@ -64,6 +77,7 @@ const Homepage = () => {
         if (response.status === 200) {
           const blob = await response.blob();
           const objectUrl = URL.createObjectURL(blob);
+          addCategoryPhotoToCache(path,objectUrl);
           setPhotoUrl((prevImage) => ({
             ...prevImage,
             [path]: objectUrl,
@@ -80,7 +94,7 @@ const Homepage = () => {
 
     if (isGalleryFetched) {
       galleryList.forEach((gallery) => {
-        fetchGalleryItem(gallery.path);
+        fetchGalleryItem(gallery.path, gallery);
         if (Object.hasOwnProperty.call(gallery, "image")) {
           fetchPhotoPreview(gallery.image.fullpath);
         }
@@ -98,6 +112,7 @@ const Homepage = () => {
           galleryList={galleryList}
           galleryItem={galleryItem}
           photoUrl={photoUrl}
+          isLoading={isLoading}
         />
       ) : (
         <Loading />
